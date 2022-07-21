@@ -15,6 +15,7 @@ and more.
 - [x] Manage Waterchecks
 - [ ] Manage Water-changes
 - [ ] A pretty web-ui
+- [ ] Docker
 - [ ] _(Mobile-apps)_
 
 ## What it won't offer

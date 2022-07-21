@@ -34,6 +34,7 @@ model Fressen {
   kauf_datum    DateTime       @default(dbgenerated("CURRENT_DATE")) @db.Date
   menge         Int?
   leer          Boolean        @default(false)
+  name String?
   fressen_typen FressenTypen   @relation(fields: [type_id], references: [id])
   Fuetterungen  Fuetterungen[]
 }

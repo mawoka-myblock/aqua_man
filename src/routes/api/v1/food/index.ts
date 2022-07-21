@@ -18,6 +18,7 @@ const PostFood = v.object({
     producer: v.string(),
     buying_date: v.string().chain(validateDate).optional(),
     amount: v.number().optional(),
+    name: v.string().optional()
 
 })
 type PostFoodType = v.Infer<typeof PostFood>
@@ -36,6 +37,7 @@ export const POST: RequestHandler = async ({request}) => {
                 hersteller: data.producer,
                 kauf_datum: data.buying_date === undefined ? undefined : data.buying_date.toJSDate(),
                 menge: data.amount,
+                name: data.name
             }
         })
         return {
@@ -54,4 +56,35 @@ export const POST: RequestHandler = async ({request}) => {
             throw e
         }
     }
+}
+
+
+export const GET: RequestHandler = async ({url}) => {
+    const include_empty = Boolean(url.searchParams.get("include_empty"))
+    const offset = parseInt(url.searchParams.get("offset") ?? "0")
+    const limit = parseInt(url.searchParams.get("limit") ?? "30")
+
+
+    const res = await prisma.fressen.findMany({
+        take: limit,
+        skip: offset,
+        where: {
+            leer: include_empty ? undefined : false
+        },
+        include: {
+            fressen_typen: true
+        }
+    })
+
+    if (res) {
+        return {
+            status: 200,
+            body: res
+        }
+    } else {
+        return {
+            status: 404
+        }
+    }
+
 }
