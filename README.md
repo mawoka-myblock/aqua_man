@@ -1,38 +1,24 @@
-# create-svelte
+# AquaMan
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+_Your aquarium-helper!_
 
-## Creating a project
+## What is AquaMan?
 
-If you're seeing this, you've probably already done this step. Congrats!
+**It has nothing to do with the movie**, but it helps you manage your aquarium, by keeping track of feedings, fishes
+and more.
 
-```bash
-# create a new project in the current directory
-npm init svelte
+## Features
 
-# create a new project in my-app
-npm init svelte my-app
-```
+- [x] Manage Food
+- [x] Manage Fishes
+- [x] Manage Feedings
+- [x] Manage Waterchecks
+- [ ] Manage Water-changes
+- [ ] A pretty web-ui
+- [ ] _(Mobile-apps)_
 
-## Developing
+## What it won't offer
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+AquaMan won't support any authentication at all because I am tired of caring about authentication.
+You could run AquaMan behind [SimpleSelfhostAuth](https://github.com/mawoka-myblock/SimpleSelfhostAuth), so it is
+secure.
