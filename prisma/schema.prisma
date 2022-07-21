@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -26,13 +27,15 @@ model FischeFressen {
 }
 
 model Fressen {
-  id            Int           @id @default(autoincrement())
+  id            Int            @id @default(autoincrement())
   type_id       Int
-  mhd           DateTime?     @db.Date
+  mhd           DateTime?      @db.Date
   hersteller    String?
-  kauf_datum    DateTime      @default(dbgenerated("CURRENT_DATE")) @db.Date
+  kauf_datum    DateTime       @default(dbgenerated("CURRENT_DATE")) @db.Date
   menge         Int?
-  fressen_typen FressenTypen @relation(fields: [type_id], references: [id])
+  leer          Boolean        @default(false)
+  fressen_typen FressenTypen   @relation(fields: [type_id], references: [id])
+  Fuetterungen  Fuetterungen[]
 }
 
 model FressenTypen {
@@ -40,4 +43,34 @@ model FressenTypen {
   name           String          @unique
   fische_fressen FischeFressen[]
   fressen        Fressen[]
+}
+
+model Wassertests {
+  id      Int             @id @default(autoincrement())
+  zeit    DateTime        @default(now())
+  type    WassertestTypen
+  wert    Float
+  einheit String?
+}
+
+model Fuetterungen {
+  id        Int      @id @default(autoincrement())
+  zeit      DateTime @default(now())
+  futter_id Int?
+  futter    Fressen? @relation(fields: [futter_id], references: [id])
+}
+
+enum WassertestTypen {
+  PH_WERT // ph-Wert
+  GH // Gesamthärte
+  KH // Karbonhärte
+  PHOSPHAT
+  NITRIT
+  NITRAT
+  EISEN
+  KUPFER
+  SILIKAT
+  SAUERSTOFF
+  AMMONIUM
+  CO2
 }

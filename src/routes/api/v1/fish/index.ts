@@ -1,10 +1,14 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 import type {RequestHandler} from "@sveltejs/kit";
 import * as v from "@badrap/valita";
 import {prisma} from "$lib/utils/clients";
 import {validate_json} from "$lib/utils/validate_json";
-import {DateTime} from "luxon"
 import {validateDate} from "$lib/utils/helpers";
-import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
 
 
 const PostFish = v.object({
@@ -31,6 +35,7 @@ export const POST: RequestHandler = async ({request}) => {
     const get_object_for_prisma = (index: number): object => {
         return {fressen_typen_id: data.food[index]}
     }
+
     console.log(Array.from(new Array(data.food.length), (val, index) => get_object_for_prisma(index)))
     const db_res = await prisma.fische.create({
         data: {
@@ -40,6 +45,8 @@ export const POST: RequestHandler = async ({request}) => {
             geburtsdatum: data.birthday === undefined ? undefined : data.birthday.toJSDate(),
             fische_fressen: {
                 createMany: {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore TS2322
                     data: Array.from(new Array(data.food.length), (val, index) => get_object_for_prisma(index))
                 }
             }
@@ -60,40 +67,51 @@ export const POST: RequestHandler = async ({request}) => {
 }
 
 export const GET: RequestHandler = async ({url}) => {
-    const raw_id = url.searchParams.get("id")
-    if (!raw_id) {
-        return {status: 400, body: {detail: "No id provided."}}
+    const url_query = url.searchParams.get("q")
+    const offset = parseInt(url.searchParams.get("offset") ?? "0")
+    const limit = parseInt(url.searchParams.get("limit") ?? "30")
+    if (isNaN(limit)) {
+        return {status: 400, body: {detail: "limit isn't a number"}}
     }
-    const id = parseInt(raw_id)
-    if (isNaN(id)) {
-        return {
-            status: 400,
-            body: {
-                detail: "id isn't a number"
-            }
-        }
+    if (isNaN(offset)) {
+        return {status: 400, body: {detail: "offset isn't a number"}}
     }
-    const res = await prisma.fische.findUnique({
-        where: {
-            id: id
-        },
-        include: {
-            fische_fressen: {
-                include: {
-                    fressen_typen: true
+
+
+    if (url_query) {
+        const res = await prisma.fische.findMany({
+            take: limit,
+            skip: offset,
+            where: {
+                name: {
+                    search: url_query
+                },
+                lat_name: {
+                    search: url_query
                 }
             }
+        })
+        if (res) {
+            return {
+                status: 200,
+                body: res
+            }
+        } else {
+            return {
+                status: 404
+            }
         }
-    })
-    if (res) {
+    } else {
+        const res = await prisma.fische.findMany({
+            take: limit,
+            skip: offset
+        })
+
         return {
             status: 200,
             body: res
         }
-    } else {
-        return {
-            status: 404
-        }
     }
+
 
 }
