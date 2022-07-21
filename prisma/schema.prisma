@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Fische {
+  id             Int             @id @default(autoincrement())
+  name           String?         @unique
+  geburtsdatum   DateTime?       @db.Date
+  tod            DateTime?       @db.Date
+  lat_name       String
+  fische_fressen FischeFressen[]
+}
+
+model FischeFressen {
+  fische_id        Int
+  fressen_typen_id Int
+  fische           Fische       @relation(fields: [fische_id], references: [id])
+  fressen_typen    FressenTypen @relation(fields: [fressen_typen_id], references: [id])
+
+  @@id([fische_id, fressen_typen_id])
+}
+
+model Fressen {
+  id            Int           @id @default(autoincrement())
+  type_id       Int
+  mhd           DateTime?     @db.Date
+  hersteller    String?
+  kauf_datum    DateTime      @default(dbgenerated("CURRENT_DATE")) @db.Date
+  menge         Int?
+  fressen_typen FressenTypen @relation(fields: [type_id], references: [id])
+}
+
+model FressenTypen {
+  id             Int             @id @default(autoincrement())
+  name           String          @unique
+  fische_fressen FischeFressen[]
+  fressen        Fressen[]
+}
