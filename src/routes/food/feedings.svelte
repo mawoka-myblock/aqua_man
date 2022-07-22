@@ -9,6 +9,7 @@
 
     import Spinner from "$lib/components/Spinner.svelte";
     import {DateTime} from "luxon";
+    import Pagination from "$lib/components/Pagination.svelte";
 
 
     let page = 1
@@ -22,6 +23,11 @@
         return data
     }
     let feedings_promise = get_feedings()
+
+    $: {
+        page;
+        feedings_promise = get_feedings()
+    }
 </script>
 {#await feedings_promise}
     <Spinner/>
@@ -67,34 +73,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="flex w-full mt-auto justify-center">
-            <div class="inline-flex items-center justify-center py-1 text-white bg-blue-600 rounded mb-1">
-                <button on:click={() => {page = page-1; feedings_promise = get_feedings()}}
-                        class="inline-flex items-center justify-center w-8 h-8 disabled:opacity-30"
-                        disabled={page === 1}>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </button>
-
-                <span class="w-px h-4 bg-white/25"></span>
-
-
-                <span class="w-px h-4 bg-white/25"></span>
-
-                <button on:click={() => {page = page+1; feedings_promise = get_feedings()}} disabled={!next_page_available}
-                        class="inline-flex items-center justify-center w-8 h-8 disabled:opacity-30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
-
-        </div>
+        <Pagination bind:next_page_available bind:page/>
     </div>
 
 {/await}

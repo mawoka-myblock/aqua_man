@@ -4,14 +4,23 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import * as Prisma from '@prisma/client';
+import * as PrismaDev from '@prisma/client';
 
 // This works in PROD
-import { default as ProdPrisma } from '@prisma/client';
-import Ajv from "ajv";
+// import Prisma from '@prisma/client';
 
-let { PrismaClient } = Prisma;
-if (!import.meta.env.DEV) PrismaClient = ProdPrisma.PrismaClient;
+const { PrismaClient } = PrismaDev;
+// console.log(PrismaDev)
+// if (!import.meta.env.DEV) PrismaClient = Prisma.PrismaClient;
 
 export const prisma = new PrismaClient();
-export const ajv = new Ajv()
+
+/*import Prisma, * as PrismaScope from "@prisma/client";
+const PrismaClient = Prisma?.PrismaClient || PrismaScope?.PrismaClient;
+export const prisma = new PrismaClient();*/
+
+
+/*
+import Prisma, * as PrismaAll from "@prisma/client";
+
+export const prisma = Prisma?.PrismaClient || PrismaAll?.PrismaClient;*/

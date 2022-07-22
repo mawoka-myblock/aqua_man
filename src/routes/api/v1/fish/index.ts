@@ -9,10 +9,11 @@ import * as v from "@badrap/valita";
 import {prisma} from "$lib/utils/clients";
 import {validate_json} from "$lib/utils/validate_json";
 import {validateDate} from "$lib/utils/helpers";
+import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
 
 
 const PostFish = v.object({
-    name: v.string().optional(),
+    name: v.string(),
     birthday: v.string().chain(validateDate).optional(),
     death: v.string().chain(validateDate).optional(),
     lat_name: v.string(),
@@ -36,35 +37,52 @@ export const POST: RequestHandler = async ({request}) => {
         return {fressen_typen_id: data.food[index]}
     }
 
-    const db_res = await prisma.fische.create({
-        data: {
-            name: data.name,
-            lat_name: data.lat_name,
-            tod: data.death === undefined ? undefined : data.death.toJSDate(),
-            geburtsdatum: data.birthday === undefined ? undefined : data.birthday.toJSDate(),
-            fische_fressen: {
-                createMany: {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore TS2322
-                    data: Array.from(new Array(data.food.length), (val, index) => get_object_for_prisma(index))
+    try {
+        const db_res = await prisma.fische.create({
+            data: {
+                name: data.name,
+                lat_name: data.lat_name,
+                tod: data.death === undefined ? undefined : data.death.toJSDate(),
+                geburtsdatum: data.birthday === undefined ? undefined : data.birthday.toJSDate(),
+                fische_fressen: {
+                    createMany: {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore TS2322
+                        data: Array.from(new Array(data.food.length), (val, index) => get_object_for_prisma(index))
+                    }
                 }
-            }
-        },
-        include: {
-            fische_fressen: {
-                include: {
-                    fressen_typen: true
+            },
+            include: {
+                fische_fressen: {
+                    include: {
+                        fressen_typen: true
+                    }
                 }
-            }
-        },
+            },
 
-    })
-    return {
-        status: 201,
-        body: db_res
+        })
+        return {
+            status: 201,
+            body: db_res
+        }
+    } catch (e) {
+        if (e instanceof PrismaClientKnownRequestError) {
+            if (e.code === "P2003") {
+                return {
+                    status: 404,
+                    body: {
+                        detail: "Food-Type wasn't found!"
+                    }
+                }
+            } else {
+                throw e
+            }
+        } else {
+            throw e
+        }
     }
-}
 
+}
 
 
 export const GET: RequestHandler = async ({url}) => {
@@ -90,7 +108,8 @@ export const GET: RequestHandler = async ({url}) => {
                 lat_name: {
                     search: url_query
                 }
-            }
+            },
+
         })
         if (res) {
             return {
@@ -105,7 +124,19 @@ export const GET: RequestHandler = async ({url}) => {
     } else {
         const res = await prisma.fische.findMany({
             take: limit,
-            skip: offset
+            skip: offset,
+            select: {
+                name: true,
+                tod: true,
+                lat_name: true,
+                geburtsdatum: true,
+                id: true,
+                fische_fressen: {
+                    select: {
+                        fressen_typen: true
+                    }
+                }
+            }
         })
 
         return {
