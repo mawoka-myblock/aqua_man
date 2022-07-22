@@ -65,6 +65,8 @@ export const POST: RequestHandler = async ({request}) => {
     }
 }
 
+
+
 export const GET: RequestHandler = async ({url}) => {
     const url_query = url.searchParams.get("q")
     const offset = parseInt(url.searchParams.get("offset") ?? "0")

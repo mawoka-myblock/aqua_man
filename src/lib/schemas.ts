@@ -8,7 +8,7 @@ import * as v from "@badrap/valita";
 import {validateDate} from "./utils/helpers";
 
 
-const string_min_len = (s: string): boolean => {
+export const string_min_len = (s: string): boolean => {
     return s.length !== 0
 }
 
