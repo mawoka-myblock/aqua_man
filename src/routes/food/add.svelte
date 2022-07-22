@@ -64,8 +64,11 @@
 
     let isValid = false
     const checkIfSchemaIsValid = (data): boolean => {
+        if (!data) {
+            return false
+        }
         try {
-            PostFood.parse(data)
+            PostFood.parse({...data, amount: data.amount === null ? undefined : data.amount})
             return true
         } catch (e) {
             if (!(e instanceof v.ValitaError)) throw e

@@ -18,6 +18,10 @@
             text: "Fütterungen",
             link: "/food/feedings"
         },
+        {
+            text: "Futter-Typen",
+            link: "/food/types"
+        },
     ]
     const miniSearch = new MiniSearch({
         fields: ["hersteller", "name"],

@@ -9,9 +9,7 @@ import {validate_json} from "$lib/utils/validate_json";
 import {prisma} from "$lib/utils/clients";
 import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
 import type {Infer} from "@badrap/valita";
-import {PostFood, string_min_len} from "$lib/schemas";
-import * as v from "@badrap/valita";
-import {validateDate} from "../../../../lib/utils/helpers";
+import {PostFood, PatchFood} from "$lib/schemas";
 
 
 type PostFoodType = Infer<typeof PostFood>
@@ -21,6 +19,7 @@ export const POST: RequestHandler = async ({request}) => {
     if (!res[1]) {
         return res[0]
     }
+
     const data: PostFoodType = res[0]
     try {
         const res = await prisma.fressen.create({
@@ -39,12 +38,23 @@ export const POST: RequestHandler = async ({request}) => {
         }
     } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
-            return {
+            if (e.code === "P2003") {
+                return {
+                    status: 404,
+                    body: {
+                        detail: "type_id invalid!"
+                    }
+                }
+            } else {
+                return {
                 status: 500,
                 body: {
-                    detail: e.message
+                    detail: e.message,
+                    code: e.code
                 }
             }
+            }
+
         } else {
             throw e
         }
@@ -89,33 +99,20 @@ export const GET: RequestHandler = async ({url}) => {
 
 }
 
-const PatchFood = v.object({
-    id: v.number(),
-    type_id: v.number().optional(),
-    mhd: v.string().chain(validateDate).optional(),
-    producer: v.string().assert(string_min_len).optional(),
-    buying_date: v.string().chain(validateDate).optional(),
-    amount: v.number().optional(),
-    name: v.string().assert(string_min_len).optional()
 
-})
 
-export const PATCH: RequestHandler = async ({request, url}) => {
-    let id = parseInt(url.searchParams.get("id") ?? "a")
-    if (isNaN(id)) {
-        return {status: 400, body: {detail: "id isn't a number"}}
-    }
+export const PATCH: RequestHandler = async ({request}) => {
 
-    const res = await validate_json(request, PostFood)
+    const res = await validate_json(request, PatchFood)
     if (!res[1]) {
         return res[0]
     }
-    const data: PostFoodType = res[0]
+    const data: Infer<typeof PatchFood> = res[0]
 
     try {
         const res = await prisma.fressen.update({
             where: {
-                id: id
+                id: data.id
             },
             data: {
                 type_id: data.type_id,
@@ -123,7 +120,8 @@ export const PATCH: RequestHandler = async ({request, url}) => {
                 hersteller: data.producer,
                 kauf_datum: data.buying_date === undefined ? undefined : data.buying_date.toJSDate(),
                 menge: data.amount,
-                name: data.name
+                name: data.name,
+                leer: data.empty
             }
         })
         return {

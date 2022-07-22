@@ -21,3 +21,15 @@ export const PostFood = v.object({
     name: v.string().assert(string_min_len)
 
 })
+
+export const PatchFood = v.object({
+    id: v.number(),
+    type_id: v.number().optional(),
+    mhd: v.string().chain(validateDate).optional(),
+    producer: v.string().assert(string_min_len).optional(),
+    buying_date: v.string().chain(validateDate).optional(),
+    amount: v.number().optional(),
+    name: v.string().assert(string_min_len).optional(),
+    empty: v.boolean().optional()
+
+})

@@ -30,11 +30,11 @@ model Fressen {
   id            Int            @id @default(autoincrement())
   type_id       Int
   mhd           DateTime?      @db.Date
-  hersteller    String?
+  hersteller    String
   kauf_datum    DateTime       @default(dbgenerated("CURRENT_DATE")) @db.Date
   menge         Int?
   leer          Boolean        @default(false)
-  name String?
+  name String
   fressen_typen FressenTypen   @relation(fields: [type_id], references: [id])
   Fuetterungen  Fuetterungen[]
 }
