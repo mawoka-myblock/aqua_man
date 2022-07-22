@@ -40,7 +40,6 @@
                 time: DateTime.fromFormat(test_data.zeit, "yyyy-LL-dd'T'HH:mm").toISO()
             })
         })
-        console.log("Hi!")
         if (res.ok) {
             window.location.assign("/tests")
         } else {

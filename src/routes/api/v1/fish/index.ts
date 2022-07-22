@@ -36,7 +36,6 @@ export const POST: RequestHandler = async ({request}) => {
         return {fressen_typen_id: data.food[index]}
     }
 
-    console.log(Array.from(new Array(data.food.length), (val, index) => get_object_for_prisma(index)))
     const db_res = await prisma.fische.create({
         data: {
             name: data.name,

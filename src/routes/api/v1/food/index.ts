@@ -8,20 +8,12 @@ import type {RequestHandler} from "@sveltejs/kit";
 import {validate_json} from "$lib/utils/validate_json";
 import {prisma} from "$lib/utils/clients";
 import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
-import * as v from "@badrap/valita";
-import {validateDate} from "$lib/utils/helpers";
+import type {Infer} from "@badrap/valita";
+import {PostFood} from "$lib/schemas";
 
 
-const PostFood = v.object({
-    type_id: v.number(),
-    mhd: v.string().chain(validateDate).optional(),
-    producer: v.string(),
-    buying_date: v.string().chain(validateDate).optional(),
-    amount: v.number().optional(),
-    name: v.string().optional()
 
-})
-type PostFoodType = v.Infer<typeof PostFood>
+type PostFoodType = Infer<typeof PostFood>
 
 export const POST: RequestHandler = async ({request}) => {
     const res = await validate_json(request, PostFood)
@@ -70,6 +62,9 @@ export const GET: RequestHandler = async ({url}) => {
         skip: offset,
         where: {
             leer: include_empty ? undefined : false
+        },
+        orderBy: {
+            kauf_datum: "desc"
         },
         include: {
             fressen_typen: true

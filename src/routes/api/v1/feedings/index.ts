@@ -39,7 +39,7 @@ export const POST: RequestHandler = async ({request}) => {
 
 
 export const GET: RequestHandler = async ({url}) => {
-    let limit = 10
+    let limit = 20
     let offset = 0
     let futter_typen = [-1]
     const url_params = {
@@ -83,6 +83,21 @@ export const GET: RequestHandler = async ({url}) => {
         where: {
             futter_id: futter_typen[0] === -1 ? undefined : {
                 in: futter_typen
+            }
+        },
+        orderBy: {
+            zeit: "desc"
+        },
+
+        include: {
+            futter: {
+                include: {
+                    fressen_typen: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
             }
         }
     })

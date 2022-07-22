@@ -49,3 +49,23 @@ export const POST: RequestHandler = async ({request}) => {
         }
     }
 }
+
+
+export const GET: RequestHandler = async () => {
+    const res = await prisma.fressenTypen.findMany({
+        include: {
+            _count: true
+        }
+    })
+
+    if (res) {
+        return {
+            status: 200,
+            body: res
+        }
+    } else {
+        return {
+            status: 404
+        }
+    }
+}
