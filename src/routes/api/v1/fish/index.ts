@@ -5,21 +5,15 @@
  */
 
 import type {RequestHandler} from "@sveltejs/kit";
-import * as v from "@badrap/valita";
-import {prisma} from "$lib/utils/clients";
+import type {Infer} from "@badrap/valita";
+import {prisma, Prisma} from "$lib/utils/clients";
 import {validate_json} from "$lib/utils/validate_json";
-import {validateDate} from "$lib/utils/helpers";
-import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
+import {PostFish} from "$lib/schemas";
+
+const PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError
 
 
-const PostFish = v.object({
-    name: v.string(),
-    birthday: v.string().chain(validateDate).optional(),
-    death: v.string().chain(validateDate).optional(),
-    lat_name: v.string(),
-    food: v.array(v.number())
-})
-type PostFishType = v.Infer<typeof PostFish>
+type PostFishType = Infer<typeof PostFish>
 
 export const POST: RequestHandler = async ({request}) => {
     const res = await validate_json(request, PostFish)

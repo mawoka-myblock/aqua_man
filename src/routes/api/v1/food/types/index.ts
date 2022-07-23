@@ -12,11 +12,11 @@
 
 import type {RequestHandler} from "@sveltejs/kit";
 import {validate_json} from "$lib/utils/validate_json";
-import {prisma} from "$lib/utils/clients";
-import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
+import {prisma, Prisma} from "$lib/utils/clients";
 import * as v from "@badrap/valita";
 
 
+const PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError
 const PostFoodType = v.object({
     name: v.string(),
 })

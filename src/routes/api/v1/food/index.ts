@@ -6,13 +6,14 @@
 
 import type {RequestHandler} from "@sveltejs/kit";
 import {validate_json} from "$lib/utils/validate_json";
-import {prisma} from "$lib/utils/clients";
-import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
+import {prisma, Prisma} from "$lib/utils/clients";
 import type {Infer} from "@badrap/valita";
 import {PostFood, PatchFood} from "$lib/schemas";
 
 
 type PostFoodType = Infer<typeof PostFood>
+
+const PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError
 
 export const POST: RequestHandler = async ({request}) => {
     const res = await validate_json(request, PostFood)

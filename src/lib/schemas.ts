@@ -33,3 +33,16 @@ export const PatchFood = v.object({
     empty: v.boolean().optional()
 
 })
+
+export const PostFish = v.object({
+    name: v.string().assert(string_min_len),
+    birthday: v.string().chain(validateDate).optional(),
+    death: v.string().chain(validateDate).optional(),
+    lat_name: v.string().assert(string_min_len),
+    food: v.array(v.number())
+})
+
+export const CreateUser = v.object({
+    email: v.string().assert((v) => {return Boolean(v.match("/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/"))}),
+    password: v.string()
+})

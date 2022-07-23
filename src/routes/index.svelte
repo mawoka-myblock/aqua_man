@@ -25,7 +25,7 @@
 
 
 <div class="w-screen h-screen flex justify-center align-middle">
-    <div class="my-auto flex flex-col lg:w-1/5 gap-4">
+    <div class="my-auto flex flex-col lg:w-1/5 gap-4 w-4/5">
         {#each links as link}
             <a href={link.link} class="text-center py-2 bg-cyan-500 rounded-lg hover:bg-cyan-400 transition focus:ring-[5px] ring-green-600 hover:shadow-2xl">{link.text}</a>
         {/each}
