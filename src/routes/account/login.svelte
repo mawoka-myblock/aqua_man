@@ -3,9 +3,7 @@
   - License, v. 2.0. If a copy of the MPL was not distributed with this
   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
-
 <script context="module" lang="ts">
-
 	export const load = async ({ session }) => {
 		if (session.id) {
 			return {
@@ -14,11 +12,10 @@
 			};
 		}
 		return {};
-	}
+	};
 </script>
 
 <script lang="ts">
-
 	// import tippy from 'sveltejs-tippy';
 	let loginData = {
 		email: '',
@@ -40,7 +37,7 @@
 			})
 		});
 		if (res.status === 200) {
-			window.location.replace("/")
+			window.location.replace('/');
 		}
 	};
 </script>
@@ -69,7 +66,7 @@
 				Password isn't required, because you can login via a magic link!
 			</h3>
 		</div>-->
-<!--		<span class="p-4" />-->
+		<!--		<span class="p-4" />-->
 
 		<div
 			class="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800"
@@ -81,9 +78,7 @@
 					Welcome Back
 				</h3>
 
-				<p class="mt-1 text-center text-gray-500 dark:text-gray-400">
-					Feel free to log in!
-				</p>
+				<p class="mt-1 text-center text-gray-500 dark:text-gray-400">Feel free to log in!</p>
 
 				<form on:submit|preventDefault={login}>
 					<div class="w-full mt-4">
@@ -106,9 +101,7 @@
 							</div>
 						</div>
 						<div class="dark:bg-gray-800 bg-white p-4 rounded-lg">
-							<div
-								class="relative bg-inherit w-full"
-							>
+							<div class="relative bg-inherit w-full">
 								<input
 									id="password"
 									name="username"
@@ -145,12 +138,8 @@
 				</form>
 			</div>
 
-			<div
-				class="flex items-center justify-center py-4 text-center bg-gray-50 dark:bg-gray-700"
-			>
-				<span class="text-sm text-gray-600 dark:text-gray-200"
-					>Don't have an account?
-				</span>
+			<div class="flex items-center justify-center py-4 text-center bg-gray-50 dark:bg-gray-700">
+				<span class="text-sm text-gray-600 dark:text-gray-200">Don't have an account? </span>
 
 				<a
 					href="/account/register"
@@ -161,4 +150,3 @@
 		</div>
 	</div>
 </div>
-

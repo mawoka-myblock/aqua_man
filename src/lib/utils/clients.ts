@@ -4,7 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-
 import * as Prisma_ from '@prisma/client';
 
 // This works in PROD
@@ -14,4 +13,4 @@ let { PrismaClient } = Prisma_;
 if (!import.meta.env.DEV) PrismaClient = ProdPrisma.PrismaClient;
 
 export const prisma = new PrismaClient();
-export const Prisma = Prisma_.Prisma
+export const Prisma = Prisma_.Prisma;

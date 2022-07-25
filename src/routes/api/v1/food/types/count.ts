@@ -4,24 +4,23 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import type {RequestHandler} from "@sveltejs/kit";
-import {prisma} from "$lib/utils/clients";
+import type { RequestHandler } from '@sveltejs/kit';
+import { prisma } from '$lib/utils/clients';
 
-export const GET: RequestHandler = async ({locals}) => {
-    if (!locals.id) {
-        return {
-            status: 401
-        }
-    }
-    const res = await prisma.fressenTypen.count({
-        where: {
-            user_id: locals.id
-        }
-    })
+export const GET: RequestHandler = async ({ locals }) => {
+	if (!locals.id) {
+		return {
+			status: 401
+		};
+	}
+	const res = await prisma.fressenTypen.count({
+		where: {
+			user_id: locals.id
+		}
+	});
 
-    return {
-        status: 200,
-        body: {count: res}
-    }
-
-}
+	return {
+		status: 200,
+		body: { count: res }
+	};
+};

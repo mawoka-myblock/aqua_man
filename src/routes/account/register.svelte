@@ -3,7 +3,6 @@
   - License, v. 2.0. If a copy of the MPL was not distributed with this
   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
-
 <script context="module" lang="ts">
 	export async function load({ session }) {
 		if (session.id) {
@@ -47,10 +46,10 @@
 				})
 			});
 			if (res.ok) {
-				alert("Registered successfully!")
-				window.location.replace("/")
+				alert('Registered successfully!');
+				window.location.replace('/');
 			} else {
-				alert("Error while registering")
+				alert('Error while registering');
 			}
 		}
 	});
@@ -81,8 +80,7 @@
 									class="w-full peer bg-transparent h-10 rounded-lg text-gray-700 dark:text-white placeholder-transparent ring-2 px-2 ring-gray-500 focus:ring-sky-600 focus:outline-none focus:border-rose-600"
 									placeholder="Email"
 									class:ring-red-700={$errors.email !== null}
-									class:ring-green-600={$touched.email === true &&
-										$errors.email === null}
+									class:ring-green-600={$touched.email === true && $errors.email === null}
 								/>
 								<label
 									for="email"
@@ -99,8 +97,7 @@
 									name="password1"
 									type="password"
 									class:ring-red-700={$errors.password1 !== null}
-									class:ring-green-600={$touched.password1 === true &&
-										$errors.password1 === null}
+									class:ring-green-600={$touched.password1 === true && $errors.password1 === null}
 									class="w-full peer bg-transparent h-10 rounded-lg text-gray-700 dark:text-white placeholder-transparent ring-2 px-2 ring-gray-500 focus:ring-sky-600 focus:outline-none focus:border-rose-600"
 									placeholder="Password"
 								/>
@@ -121,8 +118,7 @@
 									class="w-full peer bg-transparent h-10 rounded-lg text-gray-700 dark:text-white placeholder-transparent ring-2 px-2 ring-gray-500 focus:ring-sky-600 focus:outline-none focus:border-rose-600"
 									placeholder="Password"
 									class:ring-red-700={$errors.password2 !== null}
-									class:ring-green-600={$touched.password2 === true &&
-										$errors.password2 === null}
+									class:ring-green-600={$touched.password2 === true && $errors.password2 === null}
 								/>
 								<label
 									for="password2"
@@ -167,20 +163,14 @@
 				</form>
 			</div>
 
-			<div
-				class="flex items-center justify-center py-4 text-center bg-gray-50 dark:bg-gray-700"
-			>
-				<span class="text-sm text-gray-600 dark:text-gray-200"
-					>Already have an account?
-				</span>
+			<div class="flex items-center justify-center py-4 text-center bg-gray-50 dark:bg-gray-700">
+				<span class="text-sm text-gray-600 dark:text-gray-200">Already have an account? </span>
 
 				<a
 					href="/account/login"
-					class="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline"
-					>Login</a
+					class="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline">Login</a
 				>
 			</div>
 		</div>
 	</div>
 </div>
-
