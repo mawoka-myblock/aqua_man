@@ -5,8 +5,6 @@
   -->
 <script lang="ts">
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { DateTime } from 'luxon';
-	import { einheiten_map, type_map } from '$lib/utils/helpers';
 
 	const get_types = async () => {
 		const res = await fetch('/api/v1/food/types');

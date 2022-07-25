@@ -74,8 +74,6 @@
   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-
-
 <div class="flex justify-center w-screen h-screen">
 	<form
 		class="bg-gray-200 rounded-lg my-auto flex flex-col py-8 px-4"

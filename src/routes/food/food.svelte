@@ -1,7 +1,5 @@
 <script lang="ts">
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { DateTime } from 'luxon';
-	import { einheiten_map, type_map } from '$lib/utils/helpers';
 
 	let page = 1;
 	let next_page_available = false;

@@ -5,7 +5,6 @@
   -->
 <script lang="ts">
 	// import {WassertestTypen, type_map, einheiten_map, validateDate} from "$lib/utils/helpers";
-	import { DateTime } from 'luxon';
 	import * as v from '@badrap/valita';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { PostFish } from '$lib/schemas';
@@ -80,8 +79,6 @@
   - License, v. 2.0. If a copy of the MPL was not distributed with this
   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
-
-
 
 <div class="flex justify-center w-screen h-screen">
 	<form

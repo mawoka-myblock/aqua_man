@@ -39,8 +39,6 @@
   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-
-
 <nav
 	class="w-screen px-4 lg:px-10 py-2 flex flex-col lg:flex-row lg:items-center fixed backdrop-blur-2xl bg-white/70 shadow-md z-30 top-0"
 >

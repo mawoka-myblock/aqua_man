@@ -11,6 +11,7 @@ export type ValidationError = { status: number; body: { detail: string | object 
 export const validate_json = async (
 	request: Request,
 	valita_obj: v.ObjectType | v.ArrayType
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<[any | ValidationError, boolean]> => {
 	let json;
 	try {

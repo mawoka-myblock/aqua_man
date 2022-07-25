@@ -7,7 +7,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { validate_json } from '$lib/utils/validate_json';
 import { prisma } from '$lib/utils/clients';
-import { validateDate, possible_test_types } from '$lib/utils/helpers';
+import { validateDate } from '$lib/utils/helpers';
 import * as v from '@badrap/valita';
 
 const FeedingPost = v.object({
