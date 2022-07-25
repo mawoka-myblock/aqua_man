@@ -22,7 +22,12 @@ const PostFoodType = v.object({
 })
 type PostFoodTypeType = v.Infer<typeof PostFoodType>
 
-export const POST: RequestHandler = async ({request}) => {
+export const POST: RequestHandler = async ({request, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const res = await validate_json(request, PostFoodType)
     if (!res[1]) {
         return res[0]
@@ -31,7 +36,8 @@ export const POST: RequestHandler = async ({request}) => {
     try {
         const db_res = await prisma.fressenTypen.create({
             data: {
-                name: data.name
+                name: data.name,
+                user_id: locals.id
             }
         })
         return {
@@ -57,8 +63,16 @@ export const POST: RequestHandler = async ({request}) => {
 }
 
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const res = await prisma.fressenTypen.findMany({
+        where: {
+            user_id: locals.id
+        },
         include: {
             _count: true
         }

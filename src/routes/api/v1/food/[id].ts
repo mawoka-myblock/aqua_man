@@ -7,7 +7,12 @@
 import type {RequestHandler} from "@sveltejs/kit";
 import {prisma} from "$lib/utils/clients";
 
-export const GET: RequestHandler = async ({params}) => {
+export const GET: RequestHandler = async ({params, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const id = parseInt(params.id)
     if (isNaN(id)) {
         return {
@@ -21,7 +26,8 @@ export const GET: RequestHandler = async ({params}) => {
 
     const res = await prisma.fressen.findUnique({
         where: {
-            id: id
+            id: id,
+            user_id: locals.id
         },
         include: {
             fressen_typen: {

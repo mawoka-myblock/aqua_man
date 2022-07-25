@@ -10,8 +10,14 @@
 // for information about these interfaces
 // and what to do when importing types
 declare namespace App {
-	// interface Locals {}
+	interface Locals {
+        email?: string
+        id?: number
+    }
 	// interface Platform {}
 	// interface Session {}
-	// interface Stuff {}
+	interface Stuff {
+        email?: string
+        id?: number
+    }
 }

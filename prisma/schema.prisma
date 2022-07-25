@@ -15,6 +15,8 @@ model Fische {
   tod            DateTime?       @db.Date
   lat_name       String
   fische_fressen FischeFressen[]
+  user_id        Int
+  user           User            @relation(fields: [user_id], references: [id])
 }
 
 model FischeFressen {
@@ -22,6 +24,8 @@ model FischeFressen {
   fressen_typen_id Int
   fische           Fische       @relation(fields: [fische_id], references: [id])
   fressen_typen    FressenTypen @relation(fields: [fressen_typen_id], references: [id])
+  user_id          Int
+  user             User         @relation(fields: [user_id], references: [id])
 
   @@id([fische_id, fressen_typen_id])
 }
@@ -37,6 +41,8 @@ model Fressen {
   name          String
   fressen_typen FressenTypen   @relation(fields: [type_id], references: [id])
   Fuetterungen  Fuetterungen[]
+  user_id       Int
+  user          User           @relation(fields: [user_id], references: [id])
 }
 
 model FressenTypen {
@@ -44,6 +50,8 @@ model FressenTypen {
   name           String          @unique
   fische_fressen FischeFressen[]
   fressen        Fressen[]
+  user_id        Int
+  user           User            @relation(fields: [user_id], references: [id])
 }
 
 model Wassertests {
@@ -52,6 +60,8 @@ model Wassertests {
   type    WassertestTypen
   wert    Float
   einheit String?
+  user_id Int
+  user    User            @relation(fields: [user_id], references: [id])
 }
 
 model Fuetterungen {
@@ -59,6 +69,8 @@ model Fuetterungen {
   zeit      DateTime @default(now())
   futter_id Int?
   futter    Fressen? @relation(fields: [futter_id], references: [id])
+  user_id   Int
+  user      User     @relation(fields: [user_id], references: [id])
 }
 
 enum WassertestTypen {
@@ -74,4 +86,17 @@ enum WassertestTypen {
   SAUERSTOFF
   AMMONIUM
   CO2
+}
+
+model User {
+  id             Int             @id @default(autoincrement())
+  email          String          @unique
+  password       String
+  remember_keys  String[]
+  fuetterungen   Fuetterungen[]
+  wassertests    Wassertests[]
+  fressen_typen  FressenTypen[]
+  fressen        Fressen[]
+  fische_fressen FischeFressen[]
+  fische         Fische[]
 }

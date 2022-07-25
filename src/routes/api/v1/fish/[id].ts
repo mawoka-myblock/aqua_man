@@ -19,8 +19,13 @@
 import type {RequestHandler} from "@sveltejs/kit";
 import {prisma} from "../../../../lib/utils/clients";
 
-export const GET: RequestHandler = async ({params}) => {
-    const raw_id =params.id
+export const GET: RequestHandler = async ({params, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
+    const raw_id = params.id
     const id = parseInt(raw_id)
     if (isNaN(id)) {
         return {
@@ -30,9 +35,10 @@ export const GET: RequestHandler = async ({params}) => {
             }
         }
     }
-    const res = await prisma.fische.findUnique({
+    const res = await prisma.fische.findFirst({
         where: {
-            id: id
+            id: id,
+            user_id: locals.id
         },
         include: {
             fische_fressen: {

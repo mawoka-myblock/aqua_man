@@ -17,7 +17,12 @@ const FeedingPost = v.object({
 })
 type FeedingPostType = v.Infer<typeof FeedingPost>
 
-export const POST: RequestHandler = async ({request}) => {
+export const POST: RequestHandler = async ({request, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const res = await validate_json(request, FeedingPost)
     if (!res[1]) {
         return res[0]
@@ -27,7 +32,8 @@ export const POST: RequestHandler = async ({request}) => {
     const db_res = await prisma.fuetterungen.create({
         data: {
             futter_id: data.food,
-            zeit: data.time === undefined ? undefined : data.time.toJSDate()
+            zeit: data.time === undefined ? undefined : data.time.toJSDate(),
+            user_id: locals.id
         }
     })
     return {
@@ -38,7 +44,12 @@ export const POST: RequestHandler = async ({request}) => {
 }
 
 
-export const GET: RequestHandler = async ({url}) => {
+export const GET: RequestHandler = async ({url, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     let limit = 20
     let offset = 0
     let futter_typen = [-1]
@@ -83,7 +94,8 @@ export const GET: RequestHandler = async ({url}) => {
         where: {
             futter_id: futter_typen[0] === -1 ? undefined : {
                 in: futter_typen
-            }
+            },
+            user_id: locals.id
         },
         orderBy: {
             zeit: "desc"

@@ -15,7 +15,12 @@ const PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError
 
 type PostFishType = Infer<typeof PostFish>
 
-export const POST: RequestHandler = async ({request}) => {
+export const POST: RequestHandler = async ({request, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const res = await validate_json(request, PostFish)
     if (!res[1]) {
         return res[0]
@@ -38,6 +43,7 @@ export const POST: RequestHandler = async ({request}) => {
                 lat_name: data.lat_name,
                 tod: data.death === undefined ? undefined : data.death.toJSDate(),
                 geburtsdatum: data.birthday === undefined ? undefined : data.birthday.toJSDate(),
+                user_id: locals.id,
                 fische_fressen: {
                     createMany: {
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -79,7 +85,12 @@ export const POST: RequestHandler = async ({request}) => {
 }
 
 
-export const GET: RequestHandler = async ({url}) => {
+export const GET: RequestHandler = async ({url, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const url_query = url.searchParams.get("q")
     const offset = parseInt(url.searchParams.get("offset") ?? "0")
     const limit = parseInt(url.searchParams.get("limit") ?? "30")
@@ -101,7 +112,8 @@ export const GET: RequestHandler = async ({url}) => {
                 },
                 lat_name: {
                     search: url_query
-                }
+                },
+                user_id: locals.id
             },
 
         })
@@ -119,6 +131,9 @@ export const GET: RequestHandler = async ({url}) => {
         const res = await prisma.fische.findMany({
             take: limit,
             skip: offset,
+            where: {
+                user_id: locals.id
+            },
             select: {
                 name: true,
                 tod: true,

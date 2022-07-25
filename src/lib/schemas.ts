@@ -42,7 +42,8 @@ export const PostFish = v.object({
     food: v.array(v.number())
 })
 
+
 export const CreateUser = v.object({
-    email: v.string().assert((v) => {return Boolean(v.match("/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/"))}),
+    email: v.string().assert((v) => {return Boolean(v.match(/\S+@\S+\.\S+/))}),
     password: v.string()
 })

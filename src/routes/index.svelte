@@ -4,8 +4,25 @@
   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<script lang="ts">
 
+<script context="module" lang="ts">
+
+    export const load = async ({session}) => {
+        if (session.id) {
+            return {
+                props: {
+                    loggedIn: true
+                }
+            };
+        }
+        return {};
+    }
+</script>
+
+<script lang="ts">
+    import {onMount} from "svelte";
+
+    export let loggedIn: boolean
 
     const links = [
         {
@@ -21,13 +38,26 @@
             link: "/food"
         }
     ]
+   /* onMount(() => {
+        navigator.serviceWorker.ready.then((registration) => {
+            navigator.serviceWorker.controller.postMessage({
+                type: "lOL!!!"
+            })
+        })
+
+    })*/
 </script>
 
-
-<div class="w-screen h-screen flex justify-center align-middle">
-    <div class="my-auto flex flex-col lg:w-1/5 gap-4 w-4/5">
-        {#each links as link}
-            <a href={link.link} class="text-center py-2 bg-cyan-500 rounded-lg hover:bg-cyan-400 transition focus:ring-[5px] ring-green-600 hover:shadow-2xl">{link.text}</a>
-        {/each}
+{#if loggedIn}
+    <div class="w-screen h-screen flex justify-center align-middle">
+        <div class="my-auto flex flex-col lg:w-1/5 gap-4 w-4/5">
+            {#each links as link}
+                <a href={link.link}
+                   class="text-center py-2 bg-cyan-500 rounded-lg hover:bg-cyan-400 transition focus:ring-[5px] ring-green-600 hover:shadow-2xl">{link.text}</a>
+            {/each}
+        </div>
     </div>
-</div>
+
+{:else}
+    <h1>Welcome to AquaMan</h1>
+{/if}

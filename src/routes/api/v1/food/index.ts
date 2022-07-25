@@ -15,7 +15,12 @@ type PostFoodType = Infer<typeof PostFood>
 
 const PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError
 
-export const POST: RequestHandler = async ({request}) => {
+export const POST: RequestHandler = async ({request, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const res = await validate_json(request, PostFood)
     if (!res[1]) {
         return res[0]
@@ -25,6 +30,7 @@ export const POST: RequestHandler = async ({request}) => {
     try {
         const res = await prisma.fressen.create({
             data: {
+                user_id: locals.id,
                 type_id: data.type_id,
                 mhd: data.mhd === undefined ? undefined : data.mhd.toJSDate(),
                 hersteller: data.producer,
@@ -63,7 +69,12 @@ export const POST: RequestHandler = async ({request}) => {
 }
 
 
-export const GET: RequestHandler = async ({url}) => {
+export const GET: RequestHandler = async ({url, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const include_empty = Boolean(url.searchParams.get("include_empty"))
     const offset = parseInt(url.searchParams.get("offset") ?? "0")
     const limit = parseInt(url.searchParams.get("limit") ?? "30")
@@ -73,7 +84,8 @@ export const GET: RequestHandler = async ({url}) => {
         take: limit,
         skip: offset,
         where: {
-            leer: include_empty ? undefined : false
+            leer: include_empty ? undefined : false,
+            user_id: locals.id
         },
         orderBy: {
             kauf_datum: "desc"
@@ -102,8 +114,12 @@ export const GET: RequestHandler = async ({url}) => {
 
 
 
-export const PATCH: RequestHandler = async ({request}) => {
-
+export const PATCH: RequestHandler = async ({request, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const res = await validate_json(request, PatchFood)
     if (!res[1]) {
         return res[0]
@@ -113,7 +129,8 @@ export const PATCH: RequestHandler = async ({request}) => {
     try {
         const res = await prisma.fressen.update({
             where: {
-                id: data.id
+                id: data.id,
+                user_id: locals.id
             },
             data: {
                 type_id: data.type_id,

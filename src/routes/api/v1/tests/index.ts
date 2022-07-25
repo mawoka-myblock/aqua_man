@@ -19,7 +19,12 @@ const PostTestType = v.object({
 })
 type PostTestTypeType = v.Infer<typeof PostTestType>
 
-export const POST: RequestHandler = async ({request}) => {
+export const POST: RequestHandler = async ({request, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     const res = await validate_json(request, PostTestType)
     if (!res[1]) {
         return res[0]
@@ -28,6 +33,7 @@ export const POST: RequestHandler = async ({request}) => {
 
     const db_res = await prisma.wassertests.create({
         data: {
+            user_id: locals.id,
             einheit: data.unit,
             wert: data.value,
             zeit: data.time === undefined ? undefined : data.time.toJSDate(),
@@ -42,7 +48,12 @@ export const POST: RequestHandler = async ({request}) => {
 }
 
 
-export const GET: RequestHandler = async ({url}) => {
+export const GET: RequestHandler = async ({url, locals}) => {
+    if (!locals.id) {
+        return {
+            status: 401
+        }
+    }
     let limit = 10
     let offset = 0
     let test_types = ["*"]
@@ -94,7 +105,8 @@ export const GET: RequestHandler = async ({url}) => {
             // @ts-ignore TS2322
             type: test_types[0] === "*" ? undefined : {
                 in: test_types
-            }
+            },
+            user_id: locals.id
         }
     })
     if (res) {
