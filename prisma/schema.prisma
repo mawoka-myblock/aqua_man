@@ -11,7 +11,8 @@ datasource db {
 model Fische {
   id             Int             @id @default(autoincrement())
   name           String?         @unique
-  geburtsdatum   DateTime?       @db.Date
+  geburtsdatum   DateTime?       @default(dbgenerated("CURRENT_DATE")) @db.Date
+  maskulin       Boolean?
   tod            DateTime?       @db.Date
   lat_name       String
   fische_fressen FischeFressen[]

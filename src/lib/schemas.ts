@@ -32,10 +32,11 @@ export const PatchFood = v.object({
 });
 
 export const PostFish = v.object({
-	name: v.string().assert(string_min_len),
+	name: v.string().optional(),
 	birthday: v.string().chain(validateDate).optional(),
 	death: v.string().chain(validateDate).optional(),
 	lat_name: v.string().assert(string_min_len),
+	male: v.boolean().optional(),
 	food: v.array(v.number())
 });
 

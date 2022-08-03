@@ -41,6 +41,28 @@
 	{#await get_available_food_types()}
 		<Spinner />
 	{:then food_types}
+		<div class="flex justify-center w-screen">
+			<a
+				class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 text-xl"
+				href="/fishes/add"
+			>
+				<svg
+					class="w-12 h-12"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+					/>
+				</svg>
+				<span class="text-black">Fisch hinzufügen</span>
+			</a>
+		</div>
 		<div class="flex w-screen h-screen flex-col">
 			<div class="w-screen">
 				<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -48,10 +70,11 @@
 						class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
 					>
 						<tr>
-							<th scope="col" class="py-3 px-6"> Name </th>
-							<th scope="col" class="py-3 px-6"> Art/Lat. Name </th>
-							<th scope="col" class="py-3 px-6"> Geburtsdatum / Tod </th>
-							<th scope="col" class="py-3 px-6"> Fressen </th>
+							<th scope="col" class="py-3 px-6"> Name</th>
+							<th scope="col" class="py-3 px-6"> Art/Lat. Name</th>
+							<th scope="col" class="py-3 px-6"> Geburtsdatum / Tod</th>
+							<th scope="col" class="py-3 px-6"> Fressen</th>
+							<th scope="col" class="py-3 px-6">Geschlecht</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -61,17 +84,25 @@
 									scope="row"
 									class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
 								>
-									{fish.name}
+									{#if fish.name}
+										{fish.name}
+									{:else}
+										<p class="text-sm italic">Kein Name...</p>
+									{/if}
 								</th>
 								<td class="py-4 px-6">
 									{fish.lat_name}
 								</td>
 								<td class="py-4 px-6">
-									{DateTime.fromISO(fish.geburtsdatum).toLocaleString({
-										weekday: 'short',
-										month: 'short',
-										day: '2-digit'
-									})}
+									{#if fish.geburtsdatum}
+										{DateTime.fromISO(fish.geburtsdatum).toLocaleString({
+											weekday: 'short',
+											month: 'short',
+											day: '2-digit'
+										})}
+									{:else}
+										-
+									{/if}
 									{#if fish.tod}
 										/ {DateTime.fromISO(fish.tod).toLocaleString({
 											weekday: 'short',
@@ -83,8 +114,19 @@
 								<td class="py-4 px-6">
 									<p>
 										{#each fish.fische_fressen as food, index}
-											{#if index !== 0}, {/if}{food.fressen_typen.name}
+											{#if index !== 0},{/if}{food.fressen_typen.name}
 										{/each}
+									</p>
+								</td>
+								<td class="py-4 px-6">
+									<p>
+										{#if fish.maskulin}
+											Männlich
+										{:else if fish.maskulin === false}
+											Weiblich
+										{:else}
+											Unbestimmt
+										{/if}
 									</p>
 								</td>
 							</tr>

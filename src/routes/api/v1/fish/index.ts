@@ -14,7 +14,8 @@ const PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
 
 type PostFishType = Infer<typeof PostFish>;
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({ request, locals, url }) => {
+	const fish_count = parseInt(url.searchParams.get('count') ?? '1');
 	if (!locals.id) {
 		return {
 			status: 401
@@ -32,38 +33,44 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	const get_object_for_prisma = (index: number): object => {
-		return { fressen_typen_id: data.food[index] };
+		return { fressen_typen_id: data.food[index], user_id: locals.id };
 	};
 
 	try {
-		const db_res = await prisma.fische.create({
-			data: {
-				name: data.name,
-				lat_name: data.lat_name,
-				tod: data.death === undefined ? undefined : data.death.toJSDate(),
-				geburtsdatum: data.birthday === undefined ? undefined : data.birthday.toJSDate(),
-				user_id: locals.id,
-				fische_fressen: {
-					createMany: {
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore TS2322
-						data: Array.from(new Array(data.food.length), (val, index) =>
-							get_object_for_prisma(index)
-						)
-					}
-				}
-			},
-			include: {
-				fische_fressen: {
+		let resp_array = [];
+		for (let i = 0; i < fish_count; i++) {
+			resp_array.push(
+				await prisma.fische.create({
+					data: {
+						name: data.name,
+						lat_name: data.lat_name,
+						tod: data.death === undefined ? undefined : data.death.toJSDate(),
+						geburtsdatum: data.birthday === undefined ? undefined : data.birthday.toJSDate(),
+						user_id: locals.id,
+						maskulin: data.male,
+						fische_fressen: {
+							createMany: {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore TS2322
+								data: Array.from(new Array(data.food.length), (val, index) =>
+									get_object_for_prisma(index)
+								)
+							}
+						}
+					},
 					include: {
-						fressen_typen: true
+						fische_fressen: {
+							include: {
+								fressen_typen: true
+							}
+						}
 					}
-				}
-			}
-		});
+				})
+			);
+		}
 		return {
 			status: 201,
-			body: db_res
+			body: resp_array
 		};
 	} catch (e) {
 		if (e instanceof PrismaClientKnownRequestError) {
@@ -133,6 +140,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			select: {
 				name: true,
 				tod: true,
+				maskulin: true,
 				lat_name: true,
 				geburtsdatum: true,
 				id: true,

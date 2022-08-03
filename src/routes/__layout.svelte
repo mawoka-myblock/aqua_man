@@ -9,4 +9,6 @@
 </script>
 
 <Navbar />
-<slot />
+<div class="pt-16">
+	<slot />
+</div>

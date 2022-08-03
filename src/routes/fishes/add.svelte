@@ -21,8 +21,11 @@
 		birthday: undefined,
 		// death: undefined
 		lat_name: '',
+		male: undefined,
 		food: []
 	};
+
+	let count = 1;
 
 	let available_food_types = [];
 
@@ -37,7 +40,13 @@
 		if (!isValid) {
 			return;
 		}
-		const res = await fetch('/api/v1/fish', {
+		if (count !== 1) {
+			data.name = undefined;
+		}
+		if (data.name === '') {
+			data.name = undefined;
+		}
+		const res = await fetch(`/api/v1/fish?count=${count}`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -56,7 +65,9 @@
 		if (!data) {
 			return false;
 		}
-		console.log(data);
+		if (count !== 1) {
+			data.name === undefined;
+		}
 		try {
 			PostFish.parse({ ...data });
 			return true;
@@ -106,23 +117,36 @@
 						{/each}
 					</select>
 				</div>
-				<p />
 			{/await}
 
-			<label>
-				Name
-				<input bind:value={data.name} class="inline-block ml-2" />
-			</label>
 			<label>
 				Lateinischer Name
 				<input bind:value={data.lat_name} class="inline-block ml-2" />
 			</label>
+			<label>
+				Anzahl
+				<input bind:value={count} type="number" min="1" class="inline-block ml-2" />
+			</label>
 		</div>
 		<div class="flex flex-col gap-6 border border-green-400 rounded-lg p-2 mb-8">
 			<h3 class="italic text-center text-lg">Optional</h3>
+			{#if count === 1}
+				<label>
+					Name
+					<input bind:value={data.name} class="inline-block ml-2" />
+				</label>
+			{/if}
 			<label>
 				Geburtsdatum
 				<input bind:value={data.birthday} type="date" class="inline-block ml-2" />
+			</label>
+			<label>
+				Geschlecht
+				<select bind:value={data.male}>
+					<option value={undefined}>Not set</option>
+					<option value={true}>Männlich</option>
+					<option value={false}>Weiblich</option>
+				</select>
 			</label>
 		</div>
 
